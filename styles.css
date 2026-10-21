@@ -17,3 +17,305 @@
 .product-card{border-top:5px solid var(--agency-color,var(--green))}
 .comparison-table tr.different td{background:#fffbf2}
 @media(max-width:580px){.site-header nav{gap:3px}.site-header nav a{padding:5px 7px}}
+
+/* ===== v2 (Claude) - 첫 화면 요약, 코스 탐색, 핵심 차이, 숙박/식사, 총경비 순위, 모바일 가독성 ===== */
+:root{--paper:#fbf8f3;--good:#2f7a52;--good-bg:#e6f2e9;--warn:#b5532f;--warn-bg:#fbeee6;--night:#1f3a33}
+html{scroll-padding-top:72px}
+body{background:var(--paper)}
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.site-header{position:relative!important;top:auto;height:68px;background:var(--paper);border-bottom:0}
+.site-header nav{display:none!important}
+/* 고정 알약 메뉴 */
+.section-nav{position:sticky;top:0;z-index:15;background:#fbf8f3f2;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.section-nav-inner{max-width:1260px;margin:auto;display:flex;gap:8px;overflow-x:auto;padding:10px 36px;scrollbar-width:none}
+.section-nav-inner::-webkit-scrollbar{display:none}
+.section-nav a{flex-shrink:0;border:1px solid #ddd8cb;background:#fff;border-radius:999px;padding:7px 15px;font-size:14px;font-weight:650;color:var(--ink);white-space:nowrap}
+.section-nav a.active{background:var(--night);border-color:var(--night);color:#fff}
+/* 사진 배너 */
+.hero.hero-banner{display:block;position:relative;padding:0;max-width:none;margin:0;min-height:520px;color:#fff;overflow:hidden;background:#1d2f2a}
+.hero-banner .hero-visual{position:absolute;inset:0;height:auto}
+.hero-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:3px}
+.hero-tile{border-radius:0!important;width:100%;height:100%;overflow:hidden!important}
+.hero-tile img{width:100%;height:100%;object-fit:cover}
+.hero-tile.tile-0{grid-row:1/3}.hero-tile.tile-1{grid-column:2/4}
+.tile-caption{position:absolute;right:10px;bottom:10px;background:#0009;color:#fff;font-size:12px;padding:3px 9px;border-radius:999px;pointer-events:none}
+.hero-banner .hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#10211ccc 0%,#10211c99 40%,#10211c10 75%),linear-gradient(0deg,#10211caa 0%,transparent 45%);pointer-events:none}
+.hero-banner .hero-caption{position:absolute;left:auto;right:16px;top:14px;bottom:auto;background:#ffffffd9;color:var(--ink);font-size:12px;z-index:3;border-radius:999px;padding:5px 12px}
+.hero-banner .hero-copy{position:relative;z-index:2;padding-top:84px;padding-bottom:64px;pointer-events:none;max-width:1260px}
+.hero-banner .hero-copy>*{max-width:560px}
+.hero-banner .hero-copy a,.hero-banner .hero-copy button{pointer-events:auto}
+.hero-banner .eyebrow{color:#f2c9a7}
+.hero-banner h1{color:#fff;font-size:clamp(34px,4.4vw,56px);text-shadow:0 2px 18px #0006}
+.hero-banner h1 em{color:#f6dcc3}
+.hero-banner p{color:#f1ece4;font-size:17px;text-shadow:0 1px 8px #0007}
+.hero-banner .hero-stats{color:#e9e3d8;flex-wrap:wrap;gap:10px 22px;font-size:14px}
+.hero-banner .hero-stats strong{color:#fff;font-size:24px}
+.hero-banner .hero-actions{gap:12px}
+.button.ghost{background:#ffffff1f;color:#fff;border-color:#ffffff80}
+.button.ghost:hover{background:#ffffff33}
+/* 30초 요약 */
+.summary-section{padding-top:28px;padding-bottom:10px;position:relative;z-index:3;margin-top:-56px}
+.quick-summary{background:var(--night);color:#f3efe7;border-radius:20px;padding:24px 26px;box-shadow:0 14px 40px #1f3a3330}
+.summary-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.summary-kicker{font-weight:800;font-size:17px;color:#fff}
+.summary-asof{font-size:12px;color:#b9c6bd}
+.summary-lead{font-size:17px;line-height:1.75;margin-bottom:18px}
+.summary-lead mark{background:none;color:#ffd58a;font-weight:750}
+.diff-tiles{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.diff-tile{background:#ffffff12;border:1px solid #ffffff1f;border-radius:14px;padding:13px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.diff-icon{font-size:18px;line-height:1}
+.diff-title{font-size:13px;color:#c7d3ca;margin-top:4px}
+.diff-tile strong{font-size:17px;color:#fff;line-height:1.4}
+.diff-tile small{font-size:12.5px;color:#cfd8d1;line-height:1.55}
+.summary-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:18px;margin-top:18px}
+.pick-panel,.route-panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.pick-panel h3,.route-panel h3{font-size:18px;margin-bottom:12px}
+.quick-picks{display:flex;flex-direction:column}
+.pick-row{display:flex;align-items:center;gap:10px;background:transparent;padding:12px 2px;border-bottom:1px dashed #ddd6c6;text-align:left;width:100%}
+.pick-row:last-child{border-bottom:0}
+.pick-row:hover .pick-title{color:var(--orange)}
+.pick-title{font-weight:700;font-size:15px;display:flex;flex-direction:column;flex-shrink:0;min-width:128px}
+.pick-title small{font-weight:500;color:var(--muted);font-size:12.5px}
+.pick-ids{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;margin-left:auto}
+.mini-label{font-size:12.5px;font-weight:700;color:var(--agency-color);background:color-mix(in srgb,var(--agency-color) 12%,#fff);border:1px solid color-mix(in srgb,var(--agency-color) 30%,#fff);border-radius:6px;padding:1px 7px;white-space:nowrap}
+.pick-ids .more{font-size:12.5px;color:var(--muted);padding:1px 4px}
+.pick-arrow{color:var(--muted);font-size:20px}
+.route-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.route-card{display:flex;gap:11px;align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px;text-align:left;transition:border-color .15s,box-shadow .15s;min-width:0}
+.route-card:hover{border-color:#b7c3b6;box-shadow:var(--shadow)}
+.route-photo{width:86px;flex-shrink:0;border-radius:10px;overflow:hidden;position:relative;background:#e9e4d7;min-height:78px}
+.route-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.route-photo small{position:absolute;left:0;right:0;bottom:0;font-size:10.5px;line-height:1.3;background:#000a;color:#fff;padding:2px 4px}
+.route-photo.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.route-photo.empty small{position:static;background:none;color:var(--muted);font-weight:500}
+.route-body{display:flex;flex-direction:column;gap:3px;min-width:0;padding:2px 0}
+.route-body strong{font-size:14px;line-height:1.45;letter-spacing:-.3px}
+.route-meta{font-size:13px;color:var(--muted)}
+.route-dots{display:flex;gap:4px;margin-top:auto}
+.route-dots i{width:10px;height:10px;border-radius:50%;background:var(--agency-color)}
+.notice{margin-top:22px}
+/* 필터 */
+.filter-label{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 7px}
+.agency-tabs{margin-bottom:14px}
+.agency-tab{font-size:14px}
+.agency-tab.active{background:var(--agency-color,var(--green));border-color:var(--agency-color,var(--green))}
+.agency-tab[data-agency="all"].active{background:var(--night);border-color:var(--night)}
+.route-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.route-chip{background:#fff;border:1px solid #dcd7ca;border-radius:999px;padding:7px 14px;font-size:14px;min-height:40px}
+.route-chip small{color:var(--muted);font-size:12px;margin-left:3px}
+.route-chip.active{background:var(--night);color:#fff;border-color:var(--night)}
+.route-chip.active small{color:#cbd6cf}
+.filter-panel{grid-template-columns:2fr 1.2fr!important;align-items:end}
+.filter-panel .search-field{grid-column:auto!important}
+.more-filters{grid-column:1/-1;border-top:1px dashed var(--line);padding-top:6px}
+.more-filters>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px;padding:8px 0;min-height:44px}
+.more-filters>summary::-webkit-details-marker{display:none}
+.more-filters>summary .disclosure-arrow{margin-left:auto;transition:transform .2s}
+.more-filters[open]>summary .disclosure-arrow{transform:rotate(180deg)}
+.active-count{background:var(--orange);color:#fff;border-radius:999px;font-size:12px;padding:0 8px}
+.active-count:empty{display:none}
+.more-filter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding-top:6px}
+.more-filter-grid .filter-bottom{grid-column:1/-1}
+.filter-panel label{font-size:13px!important}
+.filter-panel select,.search-field input{font-size:14px!important}
+.active-filters{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;align-items:center}
+.active-filters:empty{display:none}
+.filter-chip{background:var(--green-light);border:1px solid #c9d6c6;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+.results-bar p,.results-bar select{font-size:14px!important}
+/* 상품 카드 */
+.product-card{border-top:5px solid var(--agency-color)}
+.best-flag{display:inline-block;margin-left:8px;background:var(--good-bg);color:var(--good);font-size:12px;font-weight:750;border-radius:6px;padding:2px 8px;vertical-align:middle}
+.tag{font-size:12.5px}
+.tag.green{background:var(--good-bg);color:var(--good)}
+.hotel-head{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:2px}
+/* 비교: 핵심 차이 */
+.block-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin:26px 0 12px}
+.block-head h3{font-size:20px;margin:0}
+.block-head p{margin:0;color:var(--muted);font-size:14px}
+.good-key{background:var(--good-bg);color:var(--good);border-radius:4px;padding:0 6px;font-weight:700}
+.key-table-wrap{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.key-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.key-table th,.key-table td{padding:10px 10px;border-bottom:1px solid #eee9dd;text-align:left;vertical-align:top;overflow-wrap:anywhere}
+.key-table tbody tr:last-child>*{border-bottom:0}
+.key-table thead th{background:#f4f0e6;font-size:14px;border-top:4px solid var(--agency-color,transparent)}
+.key-table thead th:first-child{width:128px;border-top-color:transparent}
+.key-agency{display:block;font-size:12px;color:var(--agency-color);font-weight:750}
+.key-table tbody th{font-size:14px;color:var(--muted);font-weight:650;background:#fbf9f4}
+.key-table td b{display:block;font-size:15.5px;line-height:1.4}
+.key-table td small{display:block;font-size:12.5px;color:var(--muted)}
+.key-table td.small b{font-size:13.5px;font-weight:600}
+.key-table tr.differs th{color:var(--ink)}
+.diff-dot{display:inline-block;margin-left:6px;background:var(--orange);color:#fff;border-radius:4px;font-size:11px;padding:0 5px;vertical-align:middle}
+.key-table td.good{background:var(--good-bg)}
+.key-table td.good b{color:var(--good)}
+.key-table td.warn b{color:var(--warn)}
+/* 비교: 밤마다 */
+.night-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.night-block{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.night-block h4{font-size:15px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.night-no{background:var(--night);color:#fff;border-radius:8px;padding:1px 8px;font-size:13px}
+.stay-row{border-left:4px solid var(--agency-color);padding:8px 0 10px 10px;margin-bottom:8px;border-bottom:1px solid #f0ebe0}
+.stay-row:last-child{margin-bottom:0;border-bottom:0}
+.stay-label{font-size:12.5px;font-weight:800;color:var(--agency-color)}
+.stay-hotel{display:flex;gap:9px;align-items:flex-start;margin:2px 0 6px}
+.stay-hotel b{font-size:14.5px;line-height:1.45}
+.stay-hotel small{font-size:12.5px;color:var(--muted)}
+.stay-thumb{width:54px;height:54px;flex-shrink:0;border-radius:8px;overflow:hidden;padding:0;background:#eee}
+.stay-thumb img{width:100%;height:100%;object-fit:cover}
+.fac-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.fac{font-size:12px;border-radius:5px;padding:1px 7px;font-weight:650}
+.fac.yes{background:#fdf0e3;color:#a2532a}
+.fac.no{background:#eeeeea;color:#6c6c66}
+.fac.unknown{background:#f2f0ea;color:#8a877c}
+.stay-dinner{display:flex;flex-wrap:wrap;align-items:center;gap:5px;font-size:14px;line-height:1.5}
+.meal-key{font-size:12px;font-weight:800;color:var(--muted)}
+.meal-text{flex:1 1 120px}
+.full-table{margin-top:22px}
+.full-table>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.full-table>summary::-webkit-details-marker{display:none}
+.full-table>summary strong{display:block;font-size:16px}
+.full-table>summary small{font-size:13px;color:var(--muted)}
+.full-table>summary .disclosure-arrow{margin-left:auto;transition:transform .2s}
+.full-table[open]>summary .disclosure-arrow{transform:rotate(180deg)}
+.comparison-table thead th.agency-col{border-top:5px solid var(--agency-color)}
+.cell-text{font-size:14px}
+/* 총경비 */
+.people-presets{display:flex;flex-wrap:wrap;gap:6px;grid-column:1/-1;margin:4px 0 10px}
+.chip-button{background:#fff;border:1px solid #d6d1c3;border-radius:999px;padding:6px 13px;font-size:13.5px;font-weight:600;min-height:38px}
+.chip-button:hover{border-color:var(--green)}
+.budget-output{min-width:0}
+.budget-ranking{margin-bottom:16px}
+.budget-ranking .block-head{margin-top:0}
+.ranking-hint{background:#f1ede2;border-radius:12px;padding:12px 15px;font-size:14px;color:var(--muted)}
+.rank-list{list-style:none;margin:0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 16px}
+.rank-list li{padding:11px 0;border-bottom:1px solid #efe9dd}
+.rank-list li:last-child{border-bottom:0}
+.rank-top{display:flex;align-items:center;gap:9px}
+.rank-no{width:24px;height:24px;border-radius:50%;background:var(--agency-color);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center;flex-shrink:0}
+.rank-name{font-weight:700;font-size:15px}
+.rank-top b{margin-left:auto;font-size:17px}
+.rank-bar{display:flex;height:12px;background:#f0ece2;border-radius:6px;overflow:hidden;margin:7px 0 5px}
+.bar-base{background:var(--agency-color,#5d7a6d);display:block}
+.bar-extra{background:repeating-linear-gradient(45deg,#d08a5f,#d08a5f 4px,#e4a77f 4px,#e4a77f 8px);display:block}
+.rank-meta{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:13px;color:var(--muted)}
+.rank-meta .warn,.warn-text{color:var(--warn)!important}
+.rank-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:8px}
+.rank-legend i{display:inline-block;width:14px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+.rank-legend .bar-base{background:#5d7a6d}
+/* 일정 */
+.day-thumb{width:56px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0}
+/* 사진 확대 넘기기 */
+.photo-nav{display:flex;align-items:center;justify-content:center;gap:18px;padding:4px 0 8px;font-size:14px;color:#dfe8df}
+.photo-nav[hidden]{display:none}
+.photo-step{width:44px;height:44px;border-radius:50%;background:#ffffff1f;color:#fff;font-size:26px;line-height:1;border:1px solid #ffffff40}
+.photo-step:hover{background:#ffffff38}
+.photo-dialog figcaption{font-size:14px!important}
+.photo-dialog small{font-size:12px!important}
+/* 태블릿 */
+@media(max-width:1100px){
+ .diff-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .summary-columns{grid-template-columns:1fr}
+ .night-grid{grid-template-columns:1fr}
+ .more-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:800px){
+ .section-nav-inner{padding:9px 18px}
+ .hero.hero-banner{min-height:470px}
+ .hero-mosaic{grid-template-columns:1fr;grid-template-rows:1fr}
+ .hero-tile.tile-1,.hero-tile.tile-2,.hero-tile.tile-3{display:none}
+ .hero-tile .tile-caption{display:none}
+ .hero-banner .hero-visual:after{background:linear-gradient(0deg,#10211cf0 0%,#10211ca0 50%,#10211c30 100%)}
+ .hero-banner .hero-copy{padding-top:120px;padding-bottom:70px}
+ .route-overview{grid-template-columns:1fr}
+}
+/* 스마트폰: 글씨 최소 12px, 본문 13.5px 이상 */
+@media(max-width:580px){
+ html{scroll-padding-top:62px}
+ body{font-size:15px}
+ .site-header{height:60px}
+ .section-nav-inner{padding:8px 14px;gap:6px}
+ .section-nav a{font-size:13.5px;padding:6px 12px}
+ .hero.hero-banner{min-height:440px}
+ .hero-banner .hero-copy{padding-top:110px;padding-bottom:66px}
+ .hero-banner h1{font-size:34px;letter-spacing:-1.5px}
+ .hero-banner p{font-size:15px;line-height:1.7}
+ .hero-banner .hero-stats{gap:6px 16px;font-size:13px}
+ .hero-banner .hero-stats strong{font-size:20px}
+ .hero-banner .hero-caption{font-size:11px;right:10px;top:10px}
+ .hero-banner .hero-actions .button{font-size:14px;min-height:46px;flex:1 1 0}
+ .summary-section{margin-top:-40px;padding-top:0}
+ .quick-summary{padding:18px 16px;border-radius:16px}
+ .summary-lead{font-size:15.5px}
+ .diff-tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .diff-tile:first-child{grid-column:1/-1}
+ .diff-tile{padding:11px 12px}
+ .diff-tile strong{font-size:15.5px}
+ .diff-tile small{font-size:12px}
+ .pick-panel,.route-panel{padding:16px 14px}
+ .pick-title{min-width:0;flex-shrink:1;font-size:14.5px}
+ .pick-row{flex-wrap:wrap}
+ .pick-ids{justify-content:flex-start;margin-left:0;flex:1 1 100%}
+ .pick-arrow{display:none}
+ .route-photo{width:76px}
+ .section-heading h2{font-size:24px}
+ .section-heading p{font-size:14px}
+ .section-heading .eyebrow{font-size:11px}
+ .section-heading>.button{font-size:13px}
+ .agency-tab,.route-chip{font-size:13.5px;min-height:40px}
+ .route-chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px}
+ .route-chip{flex-shrink:0}
+ .filter-panel{grid-template-columns:1fr!important}
+ .more-filter-grid{grid-template-columns:1fr 1fr}
+ .filter-panel label,.check-label,.price-filter{font-size:13px!important}
+ .check-label small{font-size:12px}
+ .product-card h3{font-size:16.5px}
+ .product-card .card-dates,.product-card .cost-note,.card-hotel{font-size:13.5px}
+ .card-hotel span{font-size:13px}
+ .notice strong{font-size:14px}.notice p{font-size:13px}
+ .compare-toolbar label{font-size:13px!important}
+ .block-head h3{font-size:18px}
+ .block-head p{font-size:13.5px}
+ .key-table th,.key-table td{padding:9px 6px}
+ .key-table thead th:first-child{width:82px}
+ .key-table tbody th{font-size:12.5px;line-height:1.4}
+ .key-table thead th{font-size:13px}
+ .key-table td b{font-size:14px}
+ .key-table td small{font-size:12px}
+ .key-table td.small b{font-size:12.5px}
+ .key-table[style*="--cols:4"] td b{font-size:13px}
+ .diff-dot{display:block;width:max-content;margin:3px 0 0}
+ .comparison-table{font-size:13px}
+ .cell-text,.cell-status{font-size:13px!important}
+ .budget-controls label{font-size:13px!important}
+ .budget-controls input,.budget-controls select{font-size:15px!important}
+ .budget-breakdown{font-size:13.5px}
+ .assumption-note,.fine-print{font-size:12px!important}
+ .selected-chip{font-size:12.5px!important}
+ .tray-label strong{font-size:13px!important}
+ .selection-tray .button{font-size:13.5px!important}
+ .detail-tabs button{font-size:13.5px}
+ .day-caption strong{font-size:15px}
+ .day-caption span,.meal-box p,.hotel-option p,.raw-list,.facts-list,.movement-list{font-size:13.5px!important}
+ .day-gallery figcaption{font-size:12px!important}
+ .insight-card summary{font-size:15px}
+ .insight-card p{font-size:14px}
+ .site-footer p{font-size:13px}
+ .soft-note{font-size:13px}
+ .photo-dialog figcaption{font-size:13px!important}
+}
+@media(max-width:360px){
+ .hero-banner h1{font-size:30px}
+ .diff-tiles{grid-template-columns:1fr}
+ .more-filter-grid{grid-template-columns:1fr}
+ .key-table thead th:first-child{width:72px}
+}
+
+.key-table thead th small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.key-table thead .key-agency{font-size:14px}
+
+@media(max-width:580px){.meal-grid{grid-template-columns:1fr!important;gap:6px!important}.meal-box{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:10px;row-gap:2px;padding:10px 12px!important;align-items:start}.meal-box>strong{grid-row:span 3;font-size:13px}.meal-box p{margin:0}.meal-box .cell-status,.meal-box .evidence-button{grid-column:2}}
+.brand-sub{font-size:11px!important}.eyebrow{font-size:11px!important}.route-photo small{font-size:11px}
+.selected-chips{overflow-x:auto;scrollbar-width:none}
+/* 최종 검수: 모바일 최소 글자 12px */
+@media(max-width:580px){.brand-sub,.hero-caption,.eyebrow,.route-photo small,.agency-tab small,.results-bar label,.agency-badge,.file-code,.card-route,.tag,.best-flag,.pair-button,.diff-dot,.scroll-hint,.remove-button,.evidence-button,.diff-mark,.budget-title,.per-product-budget,.section-heading label,.product-id,.photo-placeholder,.selected-chip button,.room-notes strong,.facts-list dt,.source-summary code,.table-product strong,.facility-grid b,.facility-grid span,.tray-label small,label small,summary span{font-size:12px!important}.card-price span,.info-note,.room-notes,.question-text,.tour-pill,.toast,.detail-overview .button{font-size:13px!important}}
+.hero-tile:hover img,.hero-tile img{transform:none!important}

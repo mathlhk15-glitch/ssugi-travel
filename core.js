@@ -4,7 +4,7 @@ export function calculateBudget(card,settings={}){
  const people=finiteNumber(settings.people??1,{min:1,max:20,integer:true});
  const singles=finiteNumber(settings.singles??0,{min:0,max:20,integer:true});
  const rate=finiteNumber(settings.rate??'',{min:.01,max:1000});
- const fields=['meal','upgrade','other','option','productExtra'];const values={};const errors=[];
+ const fields=['meal','upgrade','flightUpgrade','other','option','productExtra'];const values={};const errors=[];
  if(people===null)errors.push('성인 인원은 1~20명의 정수로 입력해 주세요.');
  if(singles===null||singles>people)errors.push('1인실 인원은 성인 인원 이하의 정수로 입력해 주세요.');
  if(settings.rate!==''&&settings.rate!==null&&settings.rate!==undefined&&rate===null)errors.push('가정 환율은 0보다 큰 숫자로 입력해 주세요.');
@@ -19,7 +19,7 @@ export function calculateBudget(card,settings={}){
  const singleJPY=single?.currency==='JPY'?single.amount*singles:0;
  const documentedKRW=base+guideKRW+singleKRW;
  const documentedJPY=guideJPY+singleJPY;
- const assumedKRW=(values.meal+values.upgrade+values.other+values.productExtra)*people;
+ const assumedKRW=(values.meal+values.upgrade+values.flightUpgrade+values.other+values.productExtra)*people;
  const assumedJPY=values.option*people;
  const yenTotal=documentedJPY+assumedJPY;
  const convertedJPY=rate===null?null:Math.round(yenTotal*rate);
@@ -27,8 +27,9 @@ export function calculateBudget(card,settings={}){
  const unresolved=[];
  if(card.guide?.status==='미확인')unresolved.push('가이드·기사 및 현지 필수경비');
  if(singles>0&&!single)unresolved.push('1인실 추가요금');
+ if(singles>0&&card.singleConflict)unresolved.push('1인실 원문 240,000원/280,000원 상충 · 240,000원 잠정 계산');
  if(card.style==='자유여행형')unresolved.push('불포함 식사·공항 개별 이동 비용');
- return {valid:true,people,singles,rate,base,guideKRW,guideJPY,singleKRW,singleJPY,documentedKRW,documentedJPY,assumedKRW,assumedJPY,yenTotal,convertedJPY,estimateKRW,
+ return {valid:true,people,singles,rate,base,guideKRW,guideJPY,singleKRW,singleJPY,documentedKRW,documentedJPY,requiredKRW:base+guideKRW,requiredJPY:guideJPY,conditionalKRW:singleKRW,conditionalJPY:singleJPY,perPersonKRW:estimateKRW/people,assumedKRW,assumedJPY,yenTotal,convertedJPY,estimateKRW,
    currencyConversionPending:yenTotal>0&&rate===null,unresolved,totalIsConfirmed:false,errors:[]};
 }
 export function fieldSignature(value){if(value===null||value===undefined||value==='')return '미확인';return String(value).replace(/\s+/g,' ').trim();}
