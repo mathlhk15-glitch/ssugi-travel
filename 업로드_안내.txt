@@ -1,0 +1,9 @@
+GitHub Pages ssugi-travel 적용 안내
+
+1. 기존 저장소 루트의 index.html을 먼저 hokkaido.html로 이름 변경하세요. (내용 수정 없음)
+2. 이 ZIP의 index.html, laos-6.html, laos-5.html, laos-cover.jpg를 저장소 루트에 업로드하세요.
+3. 기존 app.js, core.js, styles.css, assets/, data/ 등은 그대로 유지해야 hokkaido.html이 정상 동작합니다.
+4. 접속: https://mathlhk15-glitch.github.io/ssugi-travel/
+5. 버튼: hokkaido.html / laos-6.html / laos-5.html
+6. 라오스 파일 수정 범위: body 시작 지점에 '여행 선택 홈' 링크와 CSS만 추가. 기존 나머지 내용 유지.
+7. 참고: 기존 사이트 index.html을 교체하기 전에 반드시 hokkaido.html로 보존하세요.
